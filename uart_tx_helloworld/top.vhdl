@@ -1,3 +1,14 @@
+
+-- -----------------------------------------------------------------------------
+-- Module      : uart_tx_helloworld_top
+-- Description : Top-level entity for the UART TX demo on the
+--               Lattice iCE40-HX8K breakout board.
+--
+-- Clock       : i_clk  -- 12 MHz onboard oscillator
+-- Baud rate   : 9600 baud
+-- UART        : send 8 BIT of serial data
+-- -----------------------------------------------------------------------------
+
 library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
@@ -15,11 +26,6 @@ architecture behavioral of uart_tx_helloworld_top is
     constant C_CYCLES_PER_BIT : integer := C_CLK_FREQ / C_BAUDRATE; 
 
     constant C_CLK_DIV : integer := C_CLK_FREQ / 4;
-
-    signal s_send_data : std_logic := '0';
-    signal s_tx_ready: std_logic;
-    signal r_tx_ready: std_logic := '0';
-    signal r_current_byte : std_logic_vector(7 downto 0) := (others => '0');
 
     type t_string_rom is array (natural range <>) of std_logic_vector(7 downto 0);
     constant C_HELLO_WORLD : t_string_rom := (
@@ -39,16 +45,22 @@ architecture behavioral of uart_tx_helloworld_top is
         x"20"   -- ' '
     );
     constant C_MSG_LENGTH : integer := C_HELLO_WORLD'LENGTH;
+
     signal r_index: integer range 0 to C_MSG_LENGTH - 1 := 0;
+    signal s_send_data : std_logic := '0';
+    signal s_tx_ready: std_logic;
+    signal r_tx_ready: std_logic := '0';
+    signal r_current_byte : std_logic_vector(7 downto 0) := (others => '0');
   
 begin
 
+-- process sends pulse only every 'C_CLK_DIV' cycles
 process (i_clk)
   variable v_counter : integer range 0 to C_CLK_DIV - 1 := 0;
 begin
   if rising_edge(i_clk) then
     s_send_data <= '0';
-    if v_counter = C_CLK_DIV then
+    if v_counter = C_CLK_DIV - 1 then
       v_counter := 0;
       s_send_data <= '1';
     else
@@ -57,16 +69,11 @@ begin
   end if;
 end process;
 
+-- process detects rising edge on 's_tx_ready' and advances 'r_index'
 process (i_clk)
 begin
   if rising_edge(i_clk) then
     r_tx_ready <= s_tx_ready;
-  end if;  
-end process;
-
-process (i_clk)
-begin
-  if rising_edge(i_clk) then
     if s_tx_ready = '1' and r_tx_ready = '0' then
       r_current_byte <= C_HELLO_WORLD(r_index);
       if r_index = C_MSG_LENGTH - 1 then
@@ -78,7 +85,7 @@ begin
   end if;
 end process;
 
-uart_t : entity work.UART_TX
+i_uart_tx : entity work.UART_TX
   generic map (
     G_CLKS_PER_BIT => C_CYCLES_PER_BIT
   )
