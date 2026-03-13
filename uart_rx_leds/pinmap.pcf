@@ -10,7 +10,7 @@ set_io --warn-no-port o_led[5] C4
 set_io --warn-no-port o_led[6] B3
 set_io --warn-no-port o_led[7] C3
 
-# UART RX
+# UART RX Port
 set_io --warn-no-port i_data B10
 
 # Clock (12 MHz)
