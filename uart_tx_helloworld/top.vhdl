@@ -7,7 +7,7 @@ entity uart_tx_helloworld_top is
     i_clk : in std_logic;
     o_data : out std_logic
   );
-end uart_top;
+end uart_tx_helloworld_top;
 
 architecture behavioral of uart_tx_helloworld_top is
     constant C_CLK_FREQ : integer := 12000000; -- Hz
@@ -19,7 +19,6 @@ architecture behavioral of uart_tx_helloworld_top is
     signal s_send_data : std_logic := '0';
     signal s_tx_ready: std_logic;
     signal r_tx_ready: std_logic := '0';
-    variable v_index: integer range 0 to C_MSG_LENGTH - 1 := 0;
     signal r_current_byte : std_logic_vector(7 downto 0) := (others => '0');
 
     type t_string_rom is array (natural range <>) of std_logic_vector(7 downto 0);
@@ -40,6 +39,7 @@ architecture behavioral of uart_tx_helloworld_top is
         x"20"   -- ' '
     );
     constant C_MSG_LENGTH : integer := C_HELLO_WORLD'LENGTH;
+    signal r_index: integer range 0 to C_MSG_LENGTH - 1 := 0;
   
 begin
 
@@ -49,7 +49,7 @@ begin
   if rising_edge(i_clk) then
     s_send_data <= '0';
     if v_counter = C_CLK_DIV then
-      counter := 0;
+      v_counter := 0;
       s_send_data <= '1';
     else
       v_counter := v_counter + 1;
@@ -68,11 +68,11 @@ process (i_clk)
 begin
   if rising_edge(i_clk) then
     if s_tx_ready = '1' and r_tx_ready = '0' then
-      r_current_byte <= C_HELLO_WORLD(index);
-      if index = C_MSG_LENGTH - 1 then
-        index <= 0;
+      r_current_byte <= C_HELLO_WORLD(r_index);
+      if r_index = C_MSG_LENGTH - 1 then
+        r_index <= 0;
       else 
-        index <= index + 1;
+        r_index <= r_index + 1;
       end if;
     end if;
   end if;
