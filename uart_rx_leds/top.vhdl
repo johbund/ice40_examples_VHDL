@@ -34,7 +34,7 @@ begin
 o_leds  <= r_leds;
 
 process (i_clk) begin
-  if rising_edge(i_clk) && s_rx_ready = '1' then
+  if rising_edge(i_clk) and s_rx_ready = '1' then
     case r_rx_byte is
         when x"30" => r_leds(0) <= not r_leds(0);  -- '0'
         when x"31" => r_leds(1) <= not r_leds(1);  -- '1'

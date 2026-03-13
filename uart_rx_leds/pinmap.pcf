@@ -1,14 +1,14 @@
 # Lattice iCE40 breakout board pin mapping for the UART RX example
 
 # LEDs
-set_io --warn-no-port o_led[0] B5
-set_io --warn-no-port o_led[1] B4
-set_io --warn-no-port o_led[2] A2
-set_io --warn-no-port o_led[3] A1
-set_io --warn-no-port o_led[4] C5
-set_io --warn-no-port o_led[5] C4
-set_io --warn-no-port o_led[6] B3
-set_io --warn-no-port o_led[7] C3
+set_io --warn-no-port o_leds[0] B5
+set_io --warn-no-port o_leds[1] B4
+set_io --warn-no-port o_leds[2] A2
+set_io --warn-no-port o_leds[3] A1
+set_io --warn-no-port o_leds[4] C5
+set_io --warn-no-port o_leds[5] C4
+set_io --warn-no-port o_leds[6] B3
+set_io --warn-no-port o_leds[7] C3
 
 # UART RX
 set_io --warn-no-port i_data B10
