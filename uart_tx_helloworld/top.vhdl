@@ -2,15 +2,14 @@ library ieee;
   use ieee.std_logic_1164.all;
   use ieee.numeric_std.all;
 
-entity uart_top is
+entity uart_tx_helloworld_top is
   port (
     i_clk : in std_logic;
     o_data : out std_logic
-    -- led1 : out std_logic
   );
 end uart_top;
 
-architecture behavioral of uart_top is
+architecture behavioral of uart_tx_helloworld_top is
     constant C_CLK_FREQ : integer := 12000000; -- Hz
     constant C_BAUDRATE : integer := 9600; -- words / s
     constant C_CYCLES_PER_BIT : integer := C_CLK_FREQ / C_BAUDRATE; 
