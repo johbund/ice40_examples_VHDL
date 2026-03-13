@@ -1,0 +1,7 @@
+# Lattice iCE40 breakout board pin mapping for the UART TX example
+
+# UART TX Port
+set_io --warn-no-port o_data B12  # UART TX
+
+# Clock (12 MHz)
+set_io --warn-no-port i_clk J3
